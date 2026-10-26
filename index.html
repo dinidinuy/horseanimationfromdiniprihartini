@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animasi Kuda di Pantai</title>
+  <title>Animasi Kuda Interaktif di Pantai</title>
   <style>
     * {
       box-sizing: border-box;
@@ -148,10 +148,10 @@
     }
 
     @keyframes rearUp {
-      0% { transform: scale(1.3) translateY(0) rotate(0deg); }
-      30% { transform: scale(1.45) translateY(-45px) rotate(-20deg); }
-      60% { transform: scale(1.35) translateY(-20px) rotate(-10deg); }
-      100% { transform: scale(1.3) translateY(0) rotate(0deg); }
+      0% { transform: scale(1) translateY(0) rotate(0deg); }
+      30% { transform: scale(1.15) translateY(-45px) rotate(-20deg); }
+      60% { transform: scale(1.08) translateY(-20px) rotate(-10deg); }
+      100% { transform: scale(1) translateY(0) rotate(0deg); }
     }
 
     .hint {
@@ -183,36 +183,15 @@
   <script>
     const horse = document.querySelector('.horse-img');
 
+    // Inisialisasi objek Audio dengan path file suara dari folder src/sound/
+    const horseSound = new Audio('kuda.mp3');
+
     function playWhinnySound() {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sawtooth';
-      
-      const now = ctx.currentTime;
-      osc.frequency.setValueAtTime(750, now);
-      osc.frequency.linearRampToValueAtTime(1150, now + 0.15);
-      
-      // Vibrato effect ("hihihihi")
-      for (let i = 0; i < 6; i++) {
-        osc.frequency.setValueAtTime(1150, now + 0.15 + i * 0.08);
-        osc.frequency.linearRampToValueAtTime(900, now + 0.15 + i * 0.08 + 0.04);
-      }
-      
-      osc.frequency.exponentialRampToValueAtTime(350, now + 0.85);
-
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.85);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.85);
+      // Mengatur ulang posisi audio ke detik ke-0 agar bisa diputar berulang kali dengan cepat
+      horseSound.currentTime = 0;
+      horseSound.play().catch(error => {
+        console.log("Audio play diblokir oleh browser atau file tidak ditemukan:", error);
+      });
     }
 
     horse.addEventListener('click', () => {
